@@ -1,0 +1,13 @@
+public satic class Test{
+
+ public void static main(String args[]){
+ 
+ Test test = new Test()
+ test.test();
+           }
+ public void test(){
+     System.out.println(123);
+ }
+
+
+}
