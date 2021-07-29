@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yr.dao.oneToone.ClassesMapper">
+
+	<resultMap type="Classes" id="ClassResultMap">
+		<id property="id" column="c_id" />
+		<result property="name" column="c_name" />
+
+		<association property="teacher" javaType="teacher">
+			<id property="id" column="t_id" />
+			<result property="name" column="t_name" />
+		</association>
+	</resultMap>
+
+	<!-- 方式一：嵌套结果：使用嵌套结果映射来处理重复的联合结果的子集 封装联表查询的数据(去除重复的数据) select * from class c,teacher t where c.teacherId=t.t_id and c.c_id=1 association表示查询另一个对像 -->
+	<select id="getClass" parameterType="int" resultMap="ClassResultMap">
+		select * from class c,teacher t where c.teacherId=t.t_id and c.c_id=#{id}
+	</select>
+
+
+	<resultMap type="Classes" id="ClassResultMap2">
+		<id property="id" column="c_id" />
+		<result property="name" column="c_name" />
+		<association property="teacher" column="teacherId" select="getTeacher" />
+	</resultMap>
+
+	<!-- 方式二：嵌套查询：通过执行另外一个SQL映射语句来返回预期的复杂类型 SELECT * FROM class WHERE c_id=1; 
+		SELECT * FROM teacher WHERE t_id=1 //1 是上一个查询得到的teacher_id的值 -->
+	<select id="getClass2" parameterType="int" resultMap="ClassResultMap2">
+		select * from class where c_id=#{id}
+	</select>
+	
+	<select id="getTeacher" parameterType="int" resultType="Teacher">
+		select t_id id,t_name name from teacher where t_id = #{id}
+	</select>
+</mapper>

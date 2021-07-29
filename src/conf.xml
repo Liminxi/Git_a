@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	
+	<properties resource="db.properties" />
+	<typeAliases>
+	<!-- 注意配置文件的节点的顺序问题 typeAlias 需要放在package 前面 -->
+		<!--给这个类取了个别名叫_users,那么在usersMapper.xml中可以使用这个别名 -->
+		<typeAlias type="com.yr.entry.User" alias="_users" />
+		<!-- 将bean包下所有的实体类引入配置文件中方便使用 -->
+		<package name="com.yr.entry" />
+	</typeAliases>
+	<!-- development:开发模式 work:工作模式 -->
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<!-- 配置数据库连接信息 -->
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driverClass}" />
+				<property name="url" value="${jdbc.jdbcUrl}" />
+				<property name="username" value="${jdbc.user}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<mappers>
+		<!-- 注册userMapper.xml文件, userMapper.xml位于com.yr.mapper这个包下,所以resource写成com/yr/mapper/userMapper.xml -->
+		<mapper resource="com/yr/entry/mapper/userMapper.xml" />
+		<mapper resource="com/yr/dao/oneToone/classesMapper.xml" />
+		<mapper resource="com/yr/dao/oneToduo/classesMapper.xml" />
+		<!-- 注册映射接口 UserMapper -->
+<!-- 		<mapper class="com.yr.dao.UserMapper" />
+ -->	</mappers>
+</configuration>
